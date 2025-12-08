@@ -215,7 +215,7 @@ export default function Portfolio() {
                 {/* Profile Card */}
                 <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 border border-slate-700/50 mb-6">
                   <div className="flex items-center gap-4 mb-6">
-                    <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-cyan-500/25">LT</div>
+                    <img src="/avatar.jpg" alt="Ly Vinh Thai" className="w-20 h-20 rounded-2xl object-cover shadow-lg shadow-cyan-500/25 border-2 border-cyan-500/30" />
                     <div>
                       <h1 className="text-2xl font-bold text-white">Ly Vinh Thai</h1>
                       <p className="text-cyan-400 font-medium">Backend & DevOps</p>
