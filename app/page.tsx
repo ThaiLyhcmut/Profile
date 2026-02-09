@@ -18,6 +18,7 @@ const CyberGrid = dynamic(() => import("@/components/CyberGrid"), { ssr: false }
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false })
 const LanguageSwitcher = dynamic(() => import("@/components/LanguageSwitcher"), { ssr: false })
 const DevToolsBlocker = dynamic(() => import("@/components/DevToolsBlocker"), { ssr: false })
+const AIChatBot = dynamic(() => import("@/components/AIChatBot"), { ssr: false })
 
 interface GitHubProject {
   id: number
@@ -229,6 +230,7 @@ export default function Portfolio() {
       <CursorGlow />
       <LanguageSwitcher />
       <DevToolsBlocker />
+      <AIChatBot />
 
       {/* Animated gradient orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
