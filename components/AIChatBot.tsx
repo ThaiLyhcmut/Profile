@@ -37,31 +37,77 @@ export default function AIChatBot() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!inputValue.trim()) return
+
+    const userMessageText = inputValue
 
     // Add user message
     const userMessage: Message = {
       id: messages.length + 1,
-      text: inputValue,
+      text: userMessageText,
       sender: 'user',
       timestamp: new Date(),
     }
     setMessages((prev) => [...prev, userMessage])
     setInputValue('')
 
-    // Simulate bot response (you'll replace this with API call)
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: messages.length + 2,
-        text: language === 'vi'
-          ? "Cảm ơn bạn đã nhắn tin! Tính năng AI đang được phát triển. Thai sẽ sớm tích hợp API để tôi có thể trả lời câu hỏi của bạn!"
-          : "Thanks for your message! The AI feature is under development. Thai will soon integrate the API so I can answer your questions!",
-        sender: 'bot',
-        timestamp: new Date(),
+    // Add "typing" indicator
+    const typingMessage: Message = {
+      id: messages.length + 2,
+      text: '...',
+      sender: 'bot',
+      timestamp: new Date(),
+    }
+    setMessages((prev) => [...prev, typingMessage])
+
+    try {
+      // Call API
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: userMessageText,
+          chatHistory: messages.filter(m => m.text !== '...').map(m => ({
+            sender: m.sender,
+            text: m.text,
+          })),
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to get response')
       }
-      setMessages((prev) => [...prev, botMessage])
-    }, 1000)
+
+      const data = await response.json()
+
+      // Replace typing indicator with actual response
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === typingMessage.id
+            ? { ...msg, text: data.message }
+            : msg
+        )
+      )
+    } catch (error) {
+      console.error('Error calling AI:', error)
+
+      // Replace typing indicator with error message
+      setMessages((prev) =>
+        prev.map((msg) =>
+          msg.id === typingMessage.id
+            ? {
+                ...msg,
+                text: language === 'vi'
+                  ? 'Xin lỗi, đã có lỗi xảy ra. Vui lòng thử lại sau.'
+                  : 'Sorry, an error occurred. Please try again later.'
+              }
+            : msg
+        )
+      )
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
