@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify({
         message: message,
         chat_history: formattedHistory,
-        model: 'command-r-plus', // or 'command-r', 'command'
+        model: 'command-a-03-2025', // Latest & most capable model (Feb 2026)
         temperature: 0.7,
         preamble: `You are an AI assistant for Ly Vinh Thai's portfolio website.
 Thai is a 4th-year Computer Science student at HCMUT (Ho Chi Minh City University of Technology).

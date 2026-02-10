@@ -272,8 +272,8 @@ export default function Portfolio() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-6 py-12 z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Sidebar */}
           <div className="lg:col-span-4">
             <div className="lg:sticky lg:top-12">

@@ -129,7 +129,7 @@ export default function AIChatBot() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-8 left-8 z-50 group"
+            className="fixed bottom-4 left-4 sm:bottom-8 sm:left-8 z-50 group"
           >
             {/* Glow effect */}
             <motion.div
@@ -146,7 +146,7 @@ export default function AIChatBot() {
             />
 
             {/* Button */}
-            <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 border-2 border-cyan-400/30">
+            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 border-2 border-cyan-400/30">
               <motion.div
                 animate={{
                   rotate: [0, 360],
@@ -157,7 +157,7 @@ export default function AIChatBot() {
                   ease: "linear",
                 }}
               >
-                <Bot size={32} className="text-white" />
+                <Bot className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
               </motion.div>
 
               {/* Pulse rings */}
@@ -202,11 +202,11 @@ export default function AIChatBot() {
               </motion.div>
             </div>
 
-            {/* Tooltip */}
+            {/* Tooltip - hidden on mobile */}
             <motion.div
               initial={{ opacity: 0, x: -10 }}
               whileHover={{ opacity: 1, x: 0 }}
-              className="absolute left-20 top-1/2 -translate-y-1/2 whitespace-nowrap bg-slate-800 text-white px-3 py-2 rounded-lg text-sm font-medium border border-cyan-500/30 shadow-lg"
+              className="hidden sm:block absolute left-20 top-1/2 -translate-y-1/2 whitespace-nowrap bg-slate-800 text-white px-3 py-2 rounded-lg text-sm font-medium border border-cyan-500/30 shadow-lg"
             >
               {language === 'vi' ? 'Trợ lý AI của Thai' : "Thai's AI Assistant"}
             </motion.div>
@@ -221,7 +221,7 @@ export default function AIChatBot() {
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            className="fixed bottom-8 left-8 z-50 w-96 h-[600px] bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-cyan-500/30 overflow-hidden flex flex-col"
+            className="fixed inset-4 sm:inset-auto sm:bottom-8 sm:left-8 z-50 sm:w-96 h-[calc(100vh-2rem)] sm:h-[600px] bg-slate-900/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-cyan-500/30 overflow-hidden flex flex-col"
           >
             {/* Header */}
             <div className="bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border-b border-cyan-500/30 p-4 flex items-center justify-between">
