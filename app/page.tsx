@@ -17,7 +17,6 @@ const ParticleNetwork = dynamic(() => import("@/components/ParticleNetwork"), { 
 const CyberGrid = dynamic(() => import("@/components/CyberGrid"), { ssr: false })
 const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false })
 const LanguageSwitcher = dynamic(() => import("@/components/LanguageSwitcher"), { ssr: false })
-const DevToolsBlocker = dynamic(() => import("@/components/DevToolsBlocker"), { ssr: false })
 const AIChatBot = dynamic(() => import("@/components/AIChatBot"), { ssr: false })
 
 interface GitHubProject {
@@ -229,7 +228,6 @@ export default function Portfolio() {
       <CyberGrid />
       <CursorGlow />
       <LanguageSwitcher />
-      <DevToolsBlocker />
       <AIChatBot />
 
       {/* Animated gradient orbs */}
