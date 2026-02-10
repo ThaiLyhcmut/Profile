@@ -2,8 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bot, X, Send, Sparkles, Zap, Brain } from 'lucide-react'
+import { Bot, X, Send, Sparkles, Zap, Brain, Download, FileText } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import dynamic from 'next/dynamic'
+import ReactMarkdown from 'react-markdown'
+import type { Components } from 'react-markdown'
+
+const AICharacter = dynamic(() => import('./AICharacter'), { ssr: false })
 
 interface Message {
   id: number
@@ -117,102 +122,90 @@ export default function AIChatBot() {
     }
   }
 
+  // Handle CV download directly without redirect
+  const handleDownloadCV = async (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    try {
+      console.log('Starting CV download...')
+      const response = await fetch('/api/cv')
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const blob = await response.blob()
+      console.log('Blob created:', blob.size, 'bytes')
+
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'CV_LyVinhThai.pdf'
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+
+      // Cleanup
+      setTimeout(() => {
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      }, 100)
+
+      console.log('Download triggered successfully')
+    } catch (error) {
+      console.error('Download error:', error)
+      alert(language === 'vi'
+        ? 'Không thể tải CV. Vui lòng thử lại sau.'
+        : 'Cannot download CV. Please try again later.')
+    }
+  }
+
+  // Custom markdown components for better rendering
+  const markdownComponents: Components = {
+    a: ({ href, children, ...props }) => {
+      // Check if this is a CV download link
+      if (href === '/api/cv') {
+        return (
+          <motion.span
+            onClick={handleDownloadCV}
+            className="inline-flex items-center gap-3 p-4 my-2 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-xl hover:border-cyan-500 transition group cursor-pointer w-full"
+            style={{ display: 'inline-flex' }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <span className="w-12 h-12 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 inline-flex items-center justify-center flex-shrink-0">
+              <FileText size={24} className="text-white" />
+            </span>
+            <span className="flex-1 inline-flex flex-col">
+              <span className="font-semibold text-white text-sm">CV_LyVinhThai.pdf</span>
+              <span className="text-xs text-slate-400">
+                {language === 'vi' ? 'Nhấn để tải xuống' : 'Click to download'}
+              </span>
+            </span>
+            <Download size={20} className="text-cyan-400 group-hover:text-cyan-300 transition" />
+          </motion.span>
+        )
+      }
+      // Regular links
+      return (
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-cyan-400 hover:text-cyan-300 underline"
+          {...props}
+        >
+          {children}
+        </a>
+      )
+    },
+  }
+
   return (
     <>
-      {/* Floating Bot Button */}
-      <AnimatePresence>
-        {isVisible && !isOpen && (
-          <motion.button
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setIsOpen(true)}
-            className="fixed bottom-4 left-4 sm:bottom-8 sm:left-8 z-50 group"
-          >
-            {/* Glow effect */}
-            <motion.div
-              className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500 blur-xl"
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-
-            {/* Button */}
-            <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50 border-2 border-cyan-400/30">
-              <motion.div
-                animate={{
-                  rotate: [0, 360],
-                }}
-                transition={{
-                  duration: 20,
-                  repeat: Infinity,
-                  ease: "linear",
-                }}
-              >
-                <Bot className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
-              </motion.div>
-
-              {/* Pulse rings */}
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-cyan-400"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [1, 0, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-full border-2 border-blue-400"
-                animate={{
-                  scale: [1, 1.5, 1],
-                  opacity: [1, 0, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeOut",
-                  delay: 1,
-                }}
-              />
-
-              {/* Notification badge */}
-              <motion.div
-                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold border-2 border-slate-950"
-                animate={{
-                  scale: [1, 1.2, 1],
-                }}
-                transition={{
-                  duration: 1,
-                  repeat: Infinity,
-                }}
-              >
-                AI
-              </motion.div>
-            </div>
-
-            {/* Tooltip - hidden on mobile */}
-            <motion.div
-              initial={{ opacity: 0, x: -10 }}
-              whileHover={{ opacity: 1, x: 0 }}
-              className="hidden sm:block absolute left-20 top-1/2 -translate-y-1/2 whitespace-nowrap bg-slate-800 text-white px-3 py-2 rounded-lg text-sm font-medium border border-cyan-500/30 shadow-lg"
-            >
-              {language === 'vi' ? 'Trợ lý AI của Thai' : "Thai's AI Assistant"}
-            </motion.div>
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* AI Character walking around - Click to open chat */}
+      {isVisible && <AICharacter onOpenChat={() => setIsOpen(true)} />}
 
       {/* Chat Window */}
       <AnimatePresence>
@@ -257,7 +250,14 @@ export default function AIChatBot() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div
+              data-lenis-prevent
+              className="flex-1 overflow-y-auto p-4 space-y-4"
+              style={{
+                overscrollBehavior: 'contain',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
@@ -278,7 +278,15 @@ export default function AIChatBot() {
                         <span className="text-xs text-cyan-400 font-semibold">Thai's AI</span>
                       </div>
                     )}
-                    <p className="text-sm leading-relaxed">{message.text}</p>
+                    {message.sender === 'bot' ? (
+                      <div className="text-sm leading-relaxed prose prose-sm prose-invert max-w-none">
+                        <ReactMarkdown components={markdownComponents}>
+                          {message.text}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      <p className="text-sm leading-relaxed">{message.text}</p>
+                    )}
                     <p className="text-xs opacity-50 mt-1">
                       {message.timestamp.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}
                     </p>

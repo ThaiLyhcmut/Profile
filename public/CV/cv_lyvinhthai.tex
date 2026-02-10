@@ -1,0 +1,176 @@
+\documentclass[11pt,a4paper]{article}
+
+% Packages
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage[margin=0.7in]{geometry}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fontawesome5}
+\usepackage{xcolor}
+\usepackage{tabularx}
+\usepackage{multicol}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+
+% Colors
+\definecolor{primary}{RGB}{0, 102, 204}
+\definecolor{darkgray}{RGB}{50, 50, 50}
+\definecolor{lightgray}{RGB}{100, 100, 100}
+
+% Hyperlink setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    urlcolor=primary
+}
+
+% Section formatting
+\titleformat{\section}
+    {\Large\bfseries\color{primary}}
+    {}
+    {0em}
+    {}[\titlerule]
+
+\titlespacing*{\section}{0pt}{12pt}{6pt}
+
+% Remove page numbers
+\pagenumbering{gobble}
+
+% Custom commands
+\newcommand{\projectitem}[4]{
+    \textbf{#1} \hfill \textit{#2} \\
+    \textit{#3} \\
+    #4
+}
+
+\begin{document}
+
+% Định nghĩa màu sắc (ví dụ)
+\definecolor{primarycolor}{HTML}{0078D4} % Màu xanh dương cho điểm nhấn
+\definecolor{darktext}{gray}{0.3}
+
+% Thiết lập Header
+\begin{minipage}[c]{0.20\textwidth} % Giảm chiều rộng cho ảnh
+    \centering
+    % Đảm bảo ảnh avatar.jpg tồn tại và có định dạng tốt
+    \includegraphics[width=2.5cm, height=3.3cm, keepaspectratio]{avatar.jpg} 
+\end{minipage}
+\hfill
+\begin{minipage}[c]{0.78\textwidth}
+    % Tên: Rõ ràng, dùng màu chính (nếu có)
+    {\Huge\bfseries LÝ VĨNH THÁI} \\[4pt] 
+    
+    % Vị trí mong muốn: Dùng màu nhạt hơn để tạo sự tương phản
+    {\large\color{darktext} Backend Developer \& DevOps Engineer (Fresher)} \\[10pt]
+
+    % Dùng lệnh \raggedright để tránh văn bản bị dãn dòng không đều
+    \raggedright 
+    
+    % Bắt đầu khối thông tin liên hệ, sử dụng dấu phân cách rõ ràng hơn
+    \color{darktext} % Áp dụng màu nhạt cho thông tin chi tiết
+    \small % Kích thước nhỏ hơn một chút cho chi tiết
+    
+    % Dòng 1: Ngày sinh & Số điện thoại
+    \faIcon{birthday-cake} 08/04/2004 \quad\textbar\quad 
+    \faIcon{phone} 0366 063 879 \\[3pt]
+    
+    % Dòng 2: Email & Địa chỉ
+    \faIcon{envelope} \href{mailto:lyvinhthai321@gmail.com}{lyvinhthai321@gmail.com} \quad\textbar\quad
+    \faIcon{map-marker-alt} TP. Thủ Đức, TP.HCM \\[3pt]
+    
+    % Dòng 3: Profile cá nhân & Github
+    \faIcon{link} \href{https://profile.thaily.id.vn}{profile.thaily.id.vn} \quad\textbar\quad
+    \faIcon{github} \href{https://github.com/thailyhcmut}{github.com/thailyhcmut} 
+    
+\end{minipage}
+\vspace{15pt} % Tăng khoảng cách với nội dung tiếp theo
+% Dùng \rule để tạo đường phân cách ngang mỏng, tạo sự ngăn nắp
+\hrule height 0.5pt \color{black}
+
+% Objective
+\section{\faIcon{bullseye} MỤC TIÊU NGHỀ NGHIỆP}
+Sinh viên năm 4 Đại học Bách Khoa TP.HCM với đam mê phát triển Backend và DevOps. Có kinh nghiệm xây dựng hệ thống phân tán, microservices và các giải pháp cloud-native. Mong muốn được đóng góp và phát triển tại môi trường chuyên nghiệp, nơi có thể áp dụng kiến thức về gRPC, GraphQL, Kafka và container orchestration.
+
+% Education
+\section{\faIcon{graduation-cap} HỌC VẤN}
+\textbf{Đại học Bách Khoa TP.HCM (HCMUT)} \hfill 2022 -- Nay \\
+\textit{Chuyên ngành: Khoa học Máy tính / Kỹ thuật Phần mềm} \\
+Sinh viên năm 4
+
+% Experience
+\section{\faIcon{briefcase} KINH NGHIỆM LÀM VIỆC}
+\textbf{Backend Developer Intern} \hfill 04/2025 -- Nay \\
+\textit{MangoAds} \\
+\begin{itemize}[leftmargin=*, nosep]
+    \item Phát triển core backend cho dự án VPBank sử dụng Node.js
+    \item Xây dựng core framework cho các dự án nội bộ công ty
+    \item Làm việc với RESTful API, tối ưu hiệu năng và đảm bảo security best practices
+\end{itemize}
+
+% Technical Skills
+\section{\faIcon{code} KỸ NĂNG KỸ THUẬT}
+
+\textbf{Ngôn ngữ lập trình:} Golang, JavaScript/TypeScript, Python, Solidity \\[4pt]
+\textbf{Backend Frameworks:} Gin, Express.js, FastAPI, Node.js \\[4pt]
+\textbf{API \& Communication:} gRPC, GraphQL (gqlgen, Apollo), RESTful API, Protocol Buffers, WebSocket, MQTT \\[4pt]
+\textbf{Message Queue:} Apache Kafka, Redis Pub/Sub \\[4pt]
+\textbf{Databases:} PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch \\[4pt]
+\textbf{DevOps \& Cloud:}
+\begin{itemize}[leftmargin=*, nosep]
+    \item Container: Docker, Docker Compose, Portainer
+    \item Web Server: Nginx (Reverse Proxy, Load Balancing)
+    \item Cloud: AWS, Microsoft Azure, Google Cloud Platform
+    \item Monitoring: Grafana, Prometheus, Loki, Kibana
+\end{itemize}
+\textbf{Object Storage:} MinIO, AWS S3 \\[4pt]
+\textbf{Authentication:} JWT, OAuth 2.0, Google Auth, OTP \\[4pt]
+\textbf{Tools \& IDE:} Git, Linux Desktop (since 2023), Goland, PyCharm, Cursor, VSCode \\[4pt]
+\textbf{AI Tools:} Claude Code, Gemini
+
+% Projects
+\section{\faIcon{project-diagram} DỰ ÁN}
+
+\textbf{Thesis Management System} \hfill 10/2025 -- Nay | Team Size: 1 \\
+\textit{Hệ thống quản lý luận văn tốt nghiệp với AI plagiarism detection} \\
+\href{https://github.com/orgs/cms-lvtn-2025/repositories}{\faIcon{github} github.com/cms-lvtn-2025} \\
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Microservices (Golang/gRPC):} 6 services - user, role, academic, thesis, council, file
+    \item \textbf{AI/ML Service (Python):} OCR + Deep Learning, Elasticsearch full-text search, Vector Embeddings (bge-m3) cho semantic plagiarism detection
+    \item \textbf{API Gateway (Golang/GraphQL):} Gin + Gqlgen, Redis caching, MongoDB, MinIO storage, Dataloader pattern (In-Memory, Per-Request, gRPC Client)
+    \item \textbf{Job Queue (Node.js/BullMQ):} Background workers cho plagiarism check, auto file generation, grade calculation
+    \item \textbf{Frontend:} Next.js (Main App - 4 roles), Vite (Admin Console - BullMQ monitoring)
+\end{itemize}
+\textit{Tech: Golang, Python, Node.js, gRPC, GraphQL, MySQL, MongoDB, Redis, Elasticsearch, MinIO, BullMQ, Docker} \\[8pt]
+
+\textbf{Smart Home System API (IoT)} \hfill Team Size: 1 \\
+\textit{GraphQL API cho hệ thống nhà thông minh với kiến trúc microservices} \\
+\href{https://github.com/ThaiLyhcmut/DAPM-BE}{\faIcon{github} github.com/ThaiLyhcmut/DAPM-BE} \\
+\begin{itemize}[leftmargin=*, nosep]
+    \item GraphQL API (Gqlgen) với real-time subscription qua WebSocket
+    \item Microservices communication qua gRPC, message queue với Kafka
+    \item MQTT protocol cho IoT devices, JWT/Google OAuth/OTP authentication
+\end{itemize}
+\textit{Tech: Golang, Gin, Gqlgen, gRPC, Kafka, MQTT, MySQL, Docker} \\[8pt]
+
+\textbf{E-commerce Platform} \hfill Team Size: 1 \\
+\textit{Hệ thống mua sắm online với real-time chat và admin dashboard} \\
+\href{https://github.com/ThaiLyhcmut/BE_product_update}{\faIcon{github} github.com/ThaiLyhcmut/BE\_product\_update} | \href{https://be-product-update.onrender.com}{Live Demo} \\
+\begin{itemize}[leftmargin=*, nosep]
+    \item Real-time chat (WebSocket/Socket.io): friend requests, group chat
+    \item Admin dashboard: CRUD products, role management
+    \item OTP authentication via NodeMailer, image upload với Cloudinary
+\end{itemize}
+\textit{Tech: Express.js, MongoDB, Socket.io, JWT, Cloudinary, PUG}
+
+% Additional Skills
+\section{\faIcon{plus-circle} KỸ NĂNG KHÁC}
+\begin{itemize}[leftmargin=*, nosep]
+    \item \textbf{Blockchain:} Ethereum, Solidity, Web3.js
+    \item \textbf{Frontend:} React, Next.js, React Native, Expo, TailwindCSS, Material UI
+    \item \textbf{AI \& Automation:} Ollama, n8n, Open WebUI
+    \item \textbf{Soft Skills:} Làm việc nhóm, tự học nhanh, khả năng research
+\end{itemize}
+
+\end{document}
