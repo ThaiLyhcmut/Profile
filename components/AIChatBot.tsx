@@ -4,11 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bot, X, Send, Sparkles, Zap, Brain, Download, FileText } from 'lucide-react'
 import { useLanguage } from '@/contexts/LanguageContext'
-import dynamic from 'next/dynamic'
 import ReactMarkdown from 'react-markdown'
 import type { Components } from 'react-markdown'
-
-const AICharacter = dynamic(() => import('./AICharacter'), { ssr: false })
 
 interface Message {
   id: number
@@ -204,8 +201,27 @@ export default function AIChatBot() {
 
   return (
     <>
-      {/* AI Character walking around - Click to open chat */}
-      {isVisible && <AICharacter onOpenChat={() => setIsOpen(true)} />}
+      {/* Floating icon button - Click to open chat */}
+      <AnimatePresence>
+        {isVisible && !isOpen && (
+          <motion.button
+            onClick={() => setIsOpen(true)}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0 }}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.92 }}
+            aria-label="Open AI chat"
+            className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30 flex items-center justify-center group"
+          >
+            {/* Pulse ring */}
+            <span className="absolute inset-0 rounded-2xl bg-cyan-400/40 animate-ping" />
+            <Bot size={26} className="text-white relative z-10" />
+            {/* Online dot */}
+            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full border-2 border-slate-900 z-10" />
+          </motion.button>
+        )}
+      </AnimatePresence>
 
       {/* Chat Window */}
       <AnimatePresence>

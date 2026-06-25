@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState, useRef } from "react"
-import { Github, Mail, ExternalLink, Star, MapPin, Phone, Calendar, GraduationCap, Briefcase, Code2, Server, Database, Cloud, ChevronDown, Building2, Activity, Terminal } from "lucide-react"
+import Link from "next/link"
+import { Github, Mail, ExternalLink, Star, MapPin, Phone, Calendar, GraduationCap, Briefcase, Code2, Server, Database, Cloud, ChevronDown, Building2, Activity, Terminal, ArrowRight, Lock } from "lucide-react"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
@@ -11,72 +12,13 @@ import { AnimatedText, FadeIn, ScaleIn } from "@/components/AnimatedText"
 import TiltCard from "@/components/TiltCard"
 import GlowingBadge from "@/components/GlowingBadge"
 import { useLanguage } from "@/contexts/LanguageContext"
+import { PROJECTS, tr } from "@/lib/projects"
 
 // Dynamic imports for performance
-const ParticleNetwork = dynamic(() => import("@/components/ParticleNetwork"), { ssr: false })
+const MatrixRain = dynamic(() => import("@/components/MatrixRain"), { ssr: false })
 const CyberGrid = dynamic(() => import("@/components/CyberGrid"), { ssr: false })
-const CursorGlow = dynamic(() => import("@/components/CursorGlow"), { ssr: false })
 const LanguageSwitcher = dynamic(() => import("@/components/LanguageSwitcher"), { ssr: false })
 const AIChatBot = dynamic(() => import("@/components/AIChatBot"), { ssr: false })
-
-interface GitHubProject {
-  id: number
-  name: string
-  description: string | null
-  url: string
-  language: string | null
-  stargazers_count: number
-  topics: string[]
-  owner: string
-}
-
-const FEATURED_REPOS = [
-  { owner: "cms-lvtn-2025", repo: "be-lvtn" },
-  { owner: "cms-lvtn-2025", repo: "be_queue" },
-  { owner: "cms-lvtn-2025", repo: "plagiarism" },
-  { owner: "cms-lvtn-2025", repo: "fe_new" },
-  { owner: "cms-lvtn-2025", repo: "fe_admin" },
-  { owner: "ThaiLyhcmut", repo: "DAPM-BE" },
-  { owner: "ThaiLyhcmut", repo: "BE_product_update" },
-]
-
-const PROJECT_DETAILS: Record<string, { title: string; description: string; tech: string[] }> = {
-  "cms-lvtn-2025/be-lvtn": {
-    title: "Thesis Management - Core Services",
-    description: "6 gRPC microservices (user, role, academic, thesis, council, file) with MySQL",
-    tech: ["Golang", "gRPC", "MySQL", "Docker"],
-  },
-  "cms-lvtn-2025/be_queue": {
-    title: "Thesis Management - Job Queue",
-    description: "Async job processing with BullMQ for plagiarism check, file generation, grade calculation",
-    tech: ["Node.js", "TypeScript", "BullMQ", "Redis"],
-  },
-  "cms-lvtn-2025/plagiarism": {
-    title: "AI Plagiarism Detection",
-    description: "OCR + Deep Learning, Elasticsearch full-text search, Vector Embeddings (bge-m3)",
-    tech: ["Python", "Elasticsearch", "Ollama", "gRPC"],
-  },
-  "cms-lvtn-2025/fe_new": {
-    title: "Thesis Management - Frontend",
-    description: "Next.js frontend for Students, Lecturers, Academic Affairs Staff, Department Heads",
-    tech: ["Next.js", "TypeScript", "TailwindCSS"],
-  },
-  "cms-lvtn-2025/fe_admin": {
-    title: "Admin & Workflow Console",
-    description: "Admin frontend for Super Admins to configure workflows and monitor BullMQ jobs",
-    tech: ["Vite", "React", "TypeScript"],
-  },
-  "ThaiLyhcmut/DAPM-BE": {
-    title: "Smart Home IoT System",
-    description: "GraphQL API for smart home with real-time notifications, microservices, MQTT for IoT",
-    tech: ["Golang", "GraphQL", "gRPC", "Kafka", "MQTT"],
-  },
-  "ThaiLyhcmut/BE_product_update": {
-    title: "E-commerce Platform",
-    description: "Online shopping with real-time chat (WebSocket), OTP auth, admin dashboard",
-    tech: ["Express.js", "MongoDB", "Socket.io", "Cloudinary"],
-  },
-}
 
 const SKILLS = {
   languages: [
@@ -146,24 +88,21 @@ const getExperienceData = (t: (key: string) => string) => [
     type: "work" as const,
   },
   {
-    title: t('experience.thesis.title'),
-    company: t('experience.thesis.company'),
-    location: t('experience.thesis.location'),
-    period: t('experience.thesis.period'),
+    title: t('experience.covergo.title'),
+    company: t('experience.covergo.company'),
+    location: t('experience.covergo.location'),
+    period: t('experience.covergo.period'),
     description: [
-      t('experience.thesis.desc1'),
-      t('experience.thesis.desc2'),
-      t('experience.thesis.desc3'),
+      t('experience.covergo.desc1'),
+      t('experience.covergo.desc2'),
     ],
     type: "project" as const,
   },
 ]
 
 export default function Portfolio() {
-  const [projects, setProjects] = useState<GitHubProject[]>([])
-  const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState("about")
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
 
   useSmoothScroll()
 
@@ -173,100 +112,46 @@ export default function Portfolio() {
   const projectsRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = [
-        { id: "about", ref: aboutRef },
-        { id: "skills", ref: skillsRef },
-        { id: "experience", ref: experienceRef },
-        { id: "projects", ref: projectsRef },
-      ]
-      for (const section of sections) {
-        if (section.ref.current) {
-          const rect = section.ref.current.getBoundingClientRect()
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            setActiveSection(section.id)
-            break
+    const refs = [aboutRef, skillsRef, experienceRef, projectsRef]
+    // IntersectionObserver: không gọi getBoundingClientRect mỗi frame -> hết reflow khi cuộn
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting && entry.target.id) {
+            setActiveSection(entry.target.id)
           }
         }
-      }
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+      },
+      { rootMargin: "-150px 0px -55% 0px", threshold: 0 }
+    )
+    refs.forEach((ref) => ref.current && observer.observe(ref.current))
+    return () => observer.disconnect()
   }, [])
-
-  useEffect(() => {
-    const staticProjects: GitHubProject[] = FEATURED_REPOS.map(({ owner, repo }, index) => ({
-      id: index + 1,
-      name: repo,
-      description: null,
-      url: `https://github.com/${owner}/${repo}`,
-      language: null,
-      stargazers_count: 0,
-      topics: [],
-      owner: owner,
-    }))
-    setProjects(staticProjects)
-    setLoading(false)
-  }, [])
-
-  const getProjectDetails = (owner: string, name: string) => {
-    const details = PROJECT_DETAILS[`${owner}/${name}`]
-    if (!details) return null
-
-    // Use name directly as key (already matches translation keys)
-    return {
-      title: t(`project.${name}.title`),
-      description: t(`project.${name}.desc`),
-      tech: details.tech,
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 overflow-x-hidden">
       {/* Background Effects */}
-      <ParticleNetwork />
+      <MatrixRain />
       <CyberGrid />
-      <CursorGlow />
       <LanguageSwitcher />
       <AIChatBot />
 
       {/* Animated gradient orbs */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.2, 1],
-            opacity: [0.3, 0.5, 0.3],
-          }}
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          className="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500/20 rounded-full blur-2xl will-change-transform"
+          animate={{ x: [0, 30, 0], y: [0, 20, 0], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-1/2 -left-40 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1.2, 1, 1.2],
-            opacity: [0.5, 0.3, 0.5],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          className="absolute top-1/2 -left-40 w-96 h-96 bg-blue-500/20 rounded-full blur-2xl will-change-transform"
+          animate={{ x: [0, -25, 0], y: [0, -20, 0], opacity: [0.45, 0.3, 0.45] }}
+          transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute -bottom-40 right-1/3 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl"
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0.6, 0.3],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+          className="absolute -bottom-40 right-1/3 w-96 h-96 bg-emerald-500/20 rounded-full blur-2xl will-change-transform"
+          animate={{ x: [0, 20, 0], y: [0, -30, 0], opacity: [0.3, 0.5, 0.3] }}
+          transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
         />
       </div>
 
@@ -382,7 +267,7 @@ export default function Portfolio() {
                   transition={{ delay: 0.4 }}
                 >
                   <motion.a
-                    href="https://github.com/ThaiLyhcmut"
+                    href="https://github.com/thailymmo"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:text-white hover:border-cyan-500/50 transition-all group"
@@ -391,17 +276,6 @@ export default function Portfolio() {
                   >
                     <Github size={20} className="group-hover:scale-110 transition" />
                     <span className="text-sm font-medium">{t('social.github')}</span>
-                  </motion.a>
-                  <motion.a
-                    href="https://github.com/orgs/cms-lvtn-2025"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl bg-slate-800/50 border border-slate-700/50 text-slate-300 hover:bg-slate-700/50 hover:text-white hover:border-cyan-500/50 transition-all group"
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <Building2 size={20} className="group-hover:scale-110 transition" />
-                    <span className="text-sm font-medium">{t('social.org')}</span>
                   </motion.a>
                   <motion.a
                     href="mailto:lyvinhthai321@gmail.com"
@@ -418,6 +292,33 @@ export default function Portfolio() {
                     <Mail size={20} className="group-hover:scale-110 transition relative z-10" />
                     <span className="text-sm font-medium relative z-10">{t('social.hire')}</span>
                   </motion.a>
+                </motion.div>
+
+                {/* Featured projects - lấp khoảng trống sidebar trái (chỉ desktop) */}
+                <motion.div
+                  className="hidden lg:block mt-6 bg-slate-800/50 backdrop-blur-sm rounded-2xl p-4 border border-slate-700/50"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <h3 className="text-xs font-semibold text-cyan-400 uppercase tracking-wide flex items-center gap-2 mb-3 px-1">
+                    <Github size={14} /> {t('projects.title')}
+                  </h3>
+                  <div className="space-y-1.5">
+                    {PROJECTS.map((project) => (
+                      <Link
+                        key={project.slug}
+                        href={`/projects/${project.slug}`}
+                        className="block group rounded-xl px-3 py-2.5 border border-transparent hover:border-cyan-500/30 hover:bg-slate-700/30 transition-all"
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-sm font-medium text-slate-200 group-hover:text-cyan-400 transition truncate">{project.title}</span>
+                          {project.private && <Lock size={11} className="text-slate-500 flex-shrink-0" />}
+                        </div>
+                        <p className="text-[11px] text-slate-500 truncate mt-0.5">{tr(project.tagline, language)}</p>
+                      </Link>
+                    ))}
+                  </div>
                 </motion.div>
               </FadeIn>
             </div>
@@ -495,34 +396,27 @@ export default function Portfolio() {
                     <p className="text-slate-400 text-sm">{t('skills.subtitle')}</p>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ gridAutoRows: '1fr' }}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" style={{ gridAutoRows: '1fr' }}>
                   {Object.entries(SKILLS).map(([category, skills], idx) => (
-                    <ScaleIn key={category} delay={idx * 0.1} className="flex">
-                      <TiltCard className="w-full">
-                        <motion.div
-                          className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50 h-full flex flex-col min-h-[200px]"
-                          whileHover={{ borderColor: "rgba(0, 212, 170, 0.3)" }}
-                        >
-                          <h3 className="text-sm font-semibold text-cyan-400 mb-4 uppercase tracking-wide flex items-center gap-2 flex-shrink-0">
-                            <Code2 size={16} /> {category.charAt(0).toUpperCase() + category.slice(1)}
-                          </h3>
-                          <div className="flex flex-wrap gap-2 flex-grow content-start">
-                            {skills.map((skill: any, skillIdx: number) => (
-                              <motion.div
-                                key={skill.name}
-                                initial={{ opacity: 0, scale: 0 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: skillIdx * 0.05 }}
-                                viewport={{ once: true }}
-                              >
-                                <GlowingBadge glowColor={skill.glow} className={`text-sm px-3 py-1.5 rounded-lg font-medium ${skill.color} cursor-default`}>
-                                  {skill.name}
-                                </GlowingBadge>
-                              </motion.div>
-                            ))}
-                          </div>
-                        </motion.div>
-                      </TiltCard>
+                    <ScaleIn key={category} delay={idx * 0.06} className="flex">
+                      <motion.div
+                        className="w-full bg-slate-800/30 backdrop-blur-sm rounded-xl p-4 border border-slate-700/50 flex flex-col"
+                        whileHover={{ borderColor: "rgba(0, 212, 170, 0.3)" }}
+                      >
+                        <h3 className="text-xs font-semibold text-cyan-400 mb-2.5 uppercase tracking-wide flex items-center gap-1.5 flex-shrink-0">
+                          <Code2 size={14} /> {category.charAt(0).toUpperCase() + category.slice(1)}
+                        </h3>
+                        <div className="flex flex-wrap gap-1.5 content-start">
+                          {skills.map((skill: any) => (
+                            <span
+                              key={skill.name}
+                              className={`text-xs px-2 py-0.5 rounded-md font-medium ${skill.color} cursor-default`}
+                            >
+                              {skill.name}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
                     </ScaleIn>
                   ))}
                 </div>
@@ -615,125 +509,47 @@ export default function Portfolio() {
                   </motion.div>
                   <div>
                     <h2 className="text-2xl font-bold text-white">{t('projects.title')}</h2>
-                    <p className="text-slate-400 text-sm">{t('projects.subtitle')} ({projects.length})</p>
+                    <p className="text-slate-400 text-sm">{t('projects.subtitle')} ({PROJECTS.length})</p>
                   </div>
                 </div>
-                {loading ? (
-                  <div className="flex justify-center items-center py-12">
-                    <div className="flex items-center gap-3 text-slate-400">
-                      <motion.div
-                        className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      />
-                      {t('projects.loading')}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 gap-4">
-                    {projects.map((project, idx) => {
-                      const details = getProjectDetails(project.owner, project.name)
-                      return (
-                        <ScaleIn key={project.id} delay={idx * 0.05}>
-                          <TiltCard>
-                            <motion.div
-                              className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl overflow-hidden group relative"
-                              whileHover={{ borderColor: "rgba(0, 212, 170, 0.5)" }}
-                            >
-                              {/* Animated glow effect */}
-                              <motion.div
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100"
-                                animate={{ x: ["-100%", "100%"] }}
-                                transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                              />
-
-                              <div className="p-6 relative z-10">
-                                <div className="flex items-start justify-between mb-3">
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2">
-                                      <h3 className="text-lg font-semibold text-white group-hover:text-cyan-400 transition">{details?.title || project.name}</h3>
-                                      {project.stargazers_count > 0 && (
-                                        <div className="flex items-center gap-1 text-sm text-yellow-400">
-                                          <Star size={14} fill="currentColor" /> {project.stargazers_count}
-                                        </div>
-                                      )}
-                                    </div>
-                                    <p className="text-xs text-slate-500 mt-0.5">
-                                      {project.owner}/{project.name}
-                                    </p>
-                                  </div>
-                                  <motion.a
-                                    href={project.url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    whileHover={{ scale: 1.1 }}
-                                    whileTap={{ scale: 0.9 }}
-                                  >
-                                    <Button variant="outline" size="sm" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 bg-transparent">
-                                      <ExternalLink size={14} className="mr-1" /> {t('projects.view')}
-                                    </Button>
-                                  </motion.a>
-                                </div>
-                                <p className="text-slate-400 text-sm mb-4">{details?.description || project.description || t('projects.noDescription')}</p>
-                                <div className="flex flex-wrap gap-2">
-                                  {(details?.tech || [project.language]).filter(Boolean).map((tech, techIdx) => (
-                                    <motion.span
-                                      key={tech}
-                                      className="text-xs bg-cyan-500/20 text-cyan-400 px-2 py-1 rounded border border-cyan-500/30"
-                                      initial={{ opacity: 0, scale: 0 }}
-                                      whileInView={{ opacity: 1, scale: 1 }}
-                                      transition={{ delay: techIdx * 0.05 }}
-                                      viewport={{ once: true }}
-                                      whileHover={{ scale: 1.1, backgroundColor: "rgba(0, 212, 170, 0.3)" }}
-                                    >
-                                      {tech}
-                                    </motion.span>
-                                  ))}
-                                </div>
-                              </div>
-                            </motion.div>
-                          </TiltCard>
-                        </ScaleIn>
-                      )
-                    })}
-                  </div>
-                )}
-              </FadeIn>
-            </section>
-
-            {/* GitHub Stats Section */}
-            <section className="scroll-mt-8">
-              <FadeIn delay={0.3}>
-                <div className="flex items-center gap-4 mb-8">
-                  <motion.div
-                    className="p-3 rounded-xl bg-green-500/20 border border-green-500/30"
-                    whileHover={{ rotate: 360, scale: 1.1 }}
-                    transition={{ duration: 0.5 }}
-                  >
-                    <Activity size={24} className="text-green-400" />
-                  </motion.div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">{t('activity.title')}</h2>
-                    <p className="text-slate-400 text-sm">{t('activity.subtitle')}</p>
-                  </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {PROJECTS.map((project, idx) => (
+                    <ScaleIn key={project.slug} delay={idx * 0.05}>
+                      <Link href={`/projects/${project.slug}`} className="block h-full">
+                        <motion.div
+                          className="h-full bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-2xl p-5 group relative overflow-hidden flex flex-col"
+                          whileHover={{ borderColor: "rgba(0, 212, 170, 0.5)", y: -3 }}
+                          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        >
+                          <div className="flex items-start justify-between gap-2 mb-2">
+                            <h3 className="text-base font-semibold text-white group-hover:text-cyan-400 transition">{project.title}</h3>
+                            {project.private && (
+                              <span className="flex-shrink-0 text-[10px] text-slate-400 bg-slate-900/60 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <Lock size={10} /> Private
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-slate-400 text-sm mb-4 flex-grow">{tr(project.tagline, language)}</p>
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex flex-wrap gap-1.5">
+                              {project.tech.slice(0, 3).map((tech) => (
+                                <span key={tech} className="text-[11px] bg-cyan-500/15 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/25">
+                                  {tech}
+                                </span>
+                              ))}
+                              {project.tech.length > 3 && (
+                                <span className="text-[11px] text-slate-500 px-1 py-0.5">+{project.tech.length - 3}</span>
+                              )}
+                            </div>
+                            <span className="flex-shrink-0 text-cyan-400 flex items-center gap-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition">
+                              {t('projects.view')} <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            </span>
+                          </div>
+                        </motion.div>
+                      </Link>
+                    </ScaleIn>
+                  ))}
                 </div>
-
-                <motion.div
-                  className="bg-slate-800/30 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50 overflow-hidden"
-                  whileHover={{ borderColor: "rgba(0, 212, 170, 0.3)" }}
-                >
-                  <div className="flex justify-center">
-                    <motion.img
-                      src="https://ghchart.rshah.org/00d4aa/thailyhcmut"
-                      alt="GitHub Contribution Graph"
-                      className="w-full max-w-2xl rounded-lg"
-                      initial={{ opacity: 0, scale: 0.9 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.5 }}
-                    />
-                  </div>
-                </motion.div>
               </FadeIn>
             </section>
 

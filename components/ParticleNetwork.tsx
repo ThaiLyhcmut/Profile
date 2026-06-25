@@ -7,7 +7,7 @@ import * as THREE from 'three'
 
 function ParticleField() {
   const ref = useRef<THREE.Points>(null!)
-  const count = 1000
+  const count = 220
 
   const particles = useMemo(() => {
     const positions = new Float32Array(count * 3)
@@ -69,7 +69,7 @@ function ParticleField() {
 
 function ConnectionLines() {
   const ref = useRef<THREE.LineSegments>(null!)
-  const count = 50
+  const count = 24
 
   const lines = useMemo(() => {
     const positions = new Float32Array(count * 6) // 2 points per line
@@ -120,7 +120,8 @@ export default function ParticleNetwork() {
     <div className="fixed inset-0 pointer-events-none z-0">
       <Canvas
         camera={{ position: [0, 0, 30], fov: 75 }}
-        gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
       >
         <ParticleField />
         <ConnectionLines />
