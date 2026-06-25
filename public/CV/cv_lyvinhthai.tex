@@ -37,6 +37,9 @@
 % Remove page numbers
 \pagenumbering{gobble}
 
+% Tắt thụt đầu dòng -> mọi tiêu đề project thẳng lề trái đồng đều
+\setlength{\parindent}{0pt}
+
 % Custom commands
 \newcommand{\projectitem}[4]{
     \textbf{#1} \hfill \textit{#2} \\
@@ -126,7 +129,7 @@ Sinh viên năm 4
 % Projects
 \section{DỰ ÁN}
 
-\textbf{Core CMS -- MongoREST Engine} \hfill MangoAds | Team: 5 (Dev core \& plugin) \\
+\textbf{Core CMS -- MongoREST Engine} \hfill Công ty (MangoAds) $\cdot$ Nhóm 5 \\
 \textit{CMS core headless: khai báo entity + cấp quyền là có ngay REST API động (filter + relation)} \\
 \begin{itemize}[leftmargin=*, nosep]
     \item \textbf{MongoREST} (ý tưởng từ PostgREST/Hasura): filter \& relation động sinh theo quyền được cấp; kiến trúc 3 lớp common $\rightarrow$ intermediate $\rightarrow$ MongoDB
@@ -136,7 +139,7 @@ Sinh viên năm 4
 \end{itemize}
 \textit{Tech: Fastify, TypeScript, MongoDB, Redis, BullMQ, MinIO} \\[8pt]
 
-\textbf{grpc-gen} \hfill Cá nhân | Open-source (MIT) \\
+\textbf{grpc-gen} \hfill Cá nhân $\cdot$ Open-source (MIT) \\
 \textit{Generator sinh full-stack gRPC + GraphQL gateway + business engine từ file .proto với 3 lệnh} \\
 \href{https://github.com/thailymmo/grpc-gen}{github.com/thailymmo/grpc-gen} \\
 \begin{itemize}[leftmargin=*, nosep]
@@ -146,7 +149,7 @@ Sinh viên năm 4
 \end{itemize}
 \textit{Tech: Go, gRPC, Protobuf, gqlgen, MongoDB, MySQL, Redis, Docker} \\[8pt]
 
-\textbf{TK -- Telegram Automation Platform} \hfill Cá nhân | \href{https://tgbot.thaily.tech}{tgbot.thaily.tech} \\
+\textbf{TK -- Telegram Automation Platform} \hfill Cá nhân $\cdot$ \href{https://tgbot.thaily.tech}{tgbot.thaily.tech} \\
 \textit{Nền tảng SaaS quản lý hàng loạt bot \& tài khoản Telegram, phục vụ 100k+ thành viên} \\
 \begin{itemize}[leftmargin=*, nosep]
     \item Quản lý nhiều bot/tài khoản, rule engine đồng bộ realtime tới agent self-host qua WebSocket
@@ -154,7 +157,7 @@ Sinh viên năm 4
 \end{itemize}
 \textit{Tech: Python, FastAPI, MongoDB, Redis, Telethon, Next.js, Web3, Cloudflare Workers} \\[8pt]
 
-\textbf{LVTN -- Thesis Management System} \hfill Team: 2 (BA + Dev) -- vai trò Dev \\
+\textbf{LVTN -- Thesis Management System} \hfill Nhóm 2 (BA + Dev, vai trò Dev) \\
 \textit{Hệ quản lý luận văn tốt nghiệp, dựng bằng grpc-gen ($\sim$80\% tự sinh)} \\
 \begin{itemize}[leftmargin=*, nosep]
     \item 5 gRPC service (user, academic, thesis, council, file) + GraphQL gateway
@@ -162,7 +165,7 @@ Sinh viên năm 4
 \end{itemize}
 \textit{Tech: Go, gRPC, GraphQL, MongoDB, MySQL, Redis, MinIO, Docker} \\[8pt]
 
-\textbf{AI TikTok Video Generator} \hfill Personal \\
+\textbf{AI TikTok Video Generator} \hfill Cá nhân \\
 \textit{Pipeline AI sản xuất video TikTok end-to-end} \\
 \begin{itemize}[leftmargin=*, nosep]
     \item AI agent (Claude Agent SDK) tự nghiên cứu web + viết kịch bản; model đi qua 9router gateway

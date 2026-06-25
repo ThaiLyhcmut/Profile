@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 
 type Language = 'en' | 'vi'
 
@@ -190,7 +190,18 @@ const translations = {
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('en')
+  const [language, setLanguageState] = useState<Language>('en')
+
+  // Khôi phục ngôn ngữ đã chọn -> đồng nhất giữa trang chính và trang detail (kể cả khi reload)
+  useEffect(() => {
+    const saved = typeof window !== 'undefined' ? window.localStorage.getItem('language') : null
+    if (saved === 'vi' || saved === 'en') setLanguageState(saved)
+  }, [])
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang)
+    if (typeof window !== 'undefined') window.localStorage.setItem('language', lang)
+  }
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations.en] || key

@@ -313,16 +313,16 @@ export default function Portfolio() {
                       >
                         <div className="flex items-center justify-between gap-2">
                           <span className="text-sm font-medium text-slate-200 group-hover:text-cyan-400 transition truncate">{project.title}</span>
-                          {project.private && <Lock size={11} className="text-slate-500 flex-shrink-0" />}
+                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                            {project.team && (
+                              <span className="text-[9px] text-cyan-400/80 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-px rounded-full whitespace-nowrap">
+                                {tr(project.team, language)}
+                              </span>
+                            )}
+                            {project.private && <Lock size={11} className="text-slate-500" />}
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 mt-0.5">
-                          {project.team && (
-                            <span className="text-[9px] text-cyan-400/80 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-px rounded-full whitespace-nowrap flex-shrink-0">
-                              {tr(project.team, language)}
-                            </span>
-                          )}
-                          <p className="text-[11px] text-slate-500 truncate">{tr(project.tagline, language)}</p>
-                        </div>
+                        <p className="text-[11px] text-slate-500 truncate mt-1">{tr(project.tagline, language)}</p>
                       </Link>
                     ))}
                   </div>
