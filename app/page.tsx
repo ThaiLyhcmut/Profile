@@ -315,7 +315,14 @@ export default function Portfolio() {
                           <span className="text-sm font-medium text-slate-200 group-hover:text-cyan-400 transition truncate">{project.title}</span>
                           {project.private && <Lock size={11} className="text-slate-500 flex-shrink-0" />}
                         </div>
-                        <p className="text-[11px] text-slate-500 truncate mt-0.5">{tr(project.tagline, language)}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          {project.team && (
+                            <span className="text-[9px] text-cyan-400/80 bg-cyan-500/10 border border-cyan-500/20 px-1.5 py-px rounded-full whitespace-nowrap flex-shrink-0">
+                              {tr(project.team, language)}
+                            </span>
+                          )}
+                          <p className="text-[11px] text-slate-500 truncate">{tr(project.tagline, language)}</p>
+                        </div>
                       </Link>
                     ))}
                   </div>
@@ -523,11 +530,18 @@ export default function Portfolio() {
                         >
                           <div className="flex items-start justify-between gap-2 mb-2">
                             <h3 className="text-base font-semibold text-white group-hover:text-cyan-400 transition">{project.title}</h3>
-                            {project.private && (
-                              <span className="flex-shrink-0 text-[10px] text-slate-400 bg-slate-900/60 px-2 py-0.5 rounded-full flex items-center gap-1">
-                                <Lock size={10} /> Private
-                              </span>
-                            )}
+                            <div className="flex items-center gap-1.5 flex-shrink-0">
+                              {project.team && (
+                                <span className="text-[10px] text-cyan-400/90 bg-cyan-500/10 border border-cyan-500/20 px-2 py-0.5 rounded-full whitespace-nowrap">
+                                  {tr(project.team, language)}
+                                </span>
+                              )}
+                              {project.private && (
+                                <span className="text-[10px] text-slate-400 bg-slate-900/60 px-2 py-0.5 rounded-full flex items-center gap-1">
+                                  <Lock size={10} /> Private
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <p className="text-slate-400 text-sm mb-4 flex-grow">{tr(project.tagline, language)}</p>
                           <div className="flex items-center justify-between gap-2">
