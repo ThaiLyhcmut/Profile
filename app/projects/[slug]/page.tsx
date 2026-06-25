@@ -164,6 +164,11 @@ export default function ProjectDetail() {
                       <Lock size={11} /> PRIVATE
                     </span>
                   )}
+                  {project.team && (
+                    <span className="text-[11px] font-mono text-slate-300 bg-slate-900/60 px-2 py-0.5 rounded flex items-center gap-1.5">
+                      <Users size={11} /> {tr(project.team, lang)}
+                    </span>
+                  )}
                 </div>
                 <h1 className="text-2xl sm:text-3xl font-bold text-white leading-tight">{project.title}</h1>
                 <p className={`${a.text} mt-1`}>{tr(project.tagline, lang)}</p>

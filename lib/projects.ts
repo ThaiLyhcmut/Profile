@@ -51,6 +51,8 @@ export interface Project {
   year?: string
   /** Repo private -> không show link ngoài */
   private?: boolean
+  /** Nhãn quy mô: "Team (5)" | "Cá nhân" ... */
+  team?: Loc
   /** Accent màu cho card/detail: tailwind color name (cyan, emerald, purple, orange...) */
   accent?: string
 
@@ -81,6 +83,7 @@ export const PROJECTS: Project[] = [
     year: "2025",
     private: true,
     accent: "blue",
+    team: { vi: "Team (5)", en: "Team (5)" },
     overview: {
       vi: "Một CMS core dạng headless: thay vì viết controller cho từng API, bạn chỉ khai báo entity và cấp quyền — hệ thống tự sinh ra REST API động với filter và relation ngay lập tức, kèm tài liệu Swagger/OpenAPI tự động. Lấy ý tưởng từ PostgREST nhưng dựng cho MongoDB, mình xây 'MongoREST' — tầng dịch quyền-được-cấp thành câu query động (filter + relation đi theo đúng quyền của người gọi). Kiến trúc 3 lớp: common (lớp API chung) → intermediate (sinh câu lệnh MongoREST) → MongoDB. Schema được quản lý ngay dưới backend bằng MongoDB native và validate bằng AJV, toàn hệ thống mở rộng qua một hệ plugin lấy cảm hứng từ WordPress. Có pipeline xử lý ảnh nền (BullMQ + Sharp) tự sinh nhiều biến thể kích thước từ một ảnh gốc. Chạy trên Fastify (hiệu năng cao), Redis (cache), MinIO (lưu trữ file), giám sát bằng Prometheus + Loki + Grafana. Hiện đang vận hành trong hệ thống thật của VPBank, ACB, Dinh Group, Vệ tinh MangoAds, Inoue, Kewpie...",
       en: "A headless CMS core: instead of writing a controller per API, you just declare an entity and grant permissions — the system auto-generates a dynamic REST API with filtering and relations on the fly, with automatic Swagger/OpenAPI docs. Inspired by PostgREST but built for MongoDB, I created 'MongoREST' — a layer that translates granted permissions into dynamic queries (filters + relations follow exactly the caller's access). A three-layer architecture: common (shared API layer) → intermediate (MongoREST query generation) → MongoDB. Schemas are managed in the backend with MongoDB native and validated with AJV, and the whole system extends through a WordPress-inspired plugin system. A background image pipeline (BullMQ + Sharp) auto-generates multiple sized variants from a single source image. It runs on Fastify (high performance), Redis (cache), MinIO (file storage), monitored with Prometheus + Loki + Grafana. It currently powers production systems for VPBank, ACB, Dinh Group, MangoAds satellites, Inoue, Kewpie...",
@@ -142,6 +145,7 @@ export const PROJECTS: Project[] = [
     tech: ["Go", "gRPC", "Protobuf", "gqlgen", "GraphQL", "MongoDB", "MySQL", "Redis", "Docker"],
     year: "11/2025",
     accent: "cyan",
+    team: { vi: "Cá nhân", en: "Personal" },
     overview: {
       vi: "Code generator viết bằng Go, lấy ý tưởng từ gqlgen, Hasura và PostgREST: bạn chỉ viết file .proto, công cụ sinh ra nguyên một production stack — các gRPC service, một GraphQL gateway đứng trước, và một business engine chạy bằng MongoDB cho validation, row-level security và compute action nhiều bước; tất cả được nối sẵn TLS, structured logging, DataLoaders và Dockerfile. Engine là data-driven (rule/scope/action là Mongo document, hot-reload không cần rebuild). Code sinh ra là Go readable commit thẳng vào repo, không phụ thuộc runtime vào tool. Đã production-tested trên 2 hệ thật (một LMS và một hệ quản lý luận văn) với ~700 integration test mỗi hệ.",
       en: "A code generator written in Go, inspired by gqlgen, Hasura and PostgREST: you write .proto files and the tool emits an entire production stack — gRPC services, a GraphQL gateway in front of them, and a MongoDB-backed business engine for validation, row-level security and multi-step compute actions; all wired with TLS, structured logging, DataLoaders and Dockerfiles. The engine is data-driven (rules/scopes/actions are Mongo documents, hot-reloaded without a rebuild). The emitted code is readable Go you commit to your repo, with no runtime dependency on the tool. Production-tested against two real apps (an LMS and a thesis-management system) with ~700 integration tests each.",
@@ -204,6 +208,7 @@ export const PROJECTS: Project[] = [
     year: "2026",
     private: true,
     accent: "pink",
+    team: { vi: "Team (2)", en: "Team (2)" },
     overview: {
       vi: "Hệ thống backend microservice quản lý đồ án/luận văn tốt nghiệp tại trường đại học, được sinh ra từ grpc-gen: khoảng 80% code (CRUD service, GraphQL gateway, business engine) là tự động, phần còn lại là business logic và một vài service phải tự code tay (grpc-gen chỉ là công cụ code nhanh, lấy ý tưởng từ Hasura/PostgREST). Gồm 5 gRPC service (user, academic, thesis, council, file) + 1 GraphQL gateway, business engine data-driven trên MongoDB (rule/RLS/action hot-reload), phân quyền đa tầng (operation + field + row-level), role hierarchy đổi theo từng học kỳ, auth Google OAuth + JWT, upload MinIO, mTLS giữa các service, và CI/CD tự build 6 Docker image.",
       en: "A microservice backend for managing university graduation theses, generated from grpc-gen: about 80% of the code (CRUD services, GraphQL gateway, business engine) is auto-generated, the rest being business logic and a few hand-coded services (grpc-gen is just a fast-coding tool, inspired by Hasura/PostgREST). It has 5 gRPC services (user, academic, thesis, council, file) + 1 GraphQL gateway, a data-driven business engine on MongoDB (rule/RLS/action hot-reload), multi-layer authorization (operation + field + row-level), a role hierarchy that changes per semester, Google OAuth + JWT auth, MinIO upload, mTLS between services, and CI/CD that auto-builds 6 Docker images.",
@@ -262,6 +267,7 @@ export const PROJECTS: Project[] = [
     year: "10/2025",
     private: true,
     accent: "emerald",
+    team: { vi: "Cá nhân", en: "Personal" },
     overview: {
       vi: "Hệ thống lớn dạng SaaS giúp quản lý tập trung nhiều bot và nhiều tài khoản Telegram cùng lúc. Backend trung tâm (FastAPI + MongoDB + Redis + AWS S3) điều phối rule engine, broadcast, thông báo, xử lý media/video và đo lường usage; các agent self-host (bot, userbot, Cloudflare Worker) chạy ở bất kỳ VPS nào và đồng bộ realtime với backend qua WebSocket. Hệ thống hiện đang hỗ trợ hơn 100.000 thành viên trên Telegram.",
       en: "A large SaaS system for centrally managing many Telegram bots and accounts at once. A central backend (FastAPI + MongoDB + Redis + AWS S3) orchestrates the rule engine, broadcast, notifications, media/video processing and usage metering; self-hosted agents (bot, userbot, Cloudflare Worker) run on any VPS and sync in realtime with the backend over WebSocket. The system currently supports more than 100,000 members on Telegram.",
@@ -322,6 +328,7 @@ export const PROJECTS: Project[] = [
     year: "2026",
     private: true,
     accent: "purple",
+    team: { vi: "Cá nhân", en: "Personal" },
     overview: {
       vi: "Một hệ thống AI sản xuất video TikTok hoàn toàn tự động theo pipeline khép kín. Một AI agent (xây trên Claude Agent SDK) tự nghiên cứu web (google_search + web_fetch), viết kịch bản voiceover tiếng Việt và chọn ảnh thật từ nguồn uy tín; toàn bộ lời gọi model đi qua '9router' — một AI gateway/proxy định tuyến tới nhiều model (gemini-pro-agent, search-combo...). Sau đó edge-TTS sinh giọng đọc, Remotion render video (ảnh + giọng + phụ đề theo template), rồi Playwright tự động đăng lên TikTok (tự giải captcha, quản lý cookie) kèm đặt lịch và hashtag. Toàn bộ được điều phối bằng n8n và điều khiển qua một app desktop (Electron); backend chạy FastAPI.",
       en: "A fully automated AI system that produces TikTok videos through a closed-loop pipeline. An AI agent (built on the Claude Agent SDK) researches the web itself (google_search + web_fetch), writes a Vietnamese voiceover script and picks real images from reputable sources; all model calls go through '9router' — an AI gateway/proxy that routes to multiple models (gemini-pro-agent, search-combo...). Then edge-TTS generates the voiceover, Remotion renders the video (images + voice + captions from templates), and Playwright auto-publishes to TikTok (solving captchas, managing cookies) with scheduling and hashtags. Everything is orchestrated with n8n and driven from an Electron desktop app; the backend runs on FastAPI.",
@@ -380,6 +387,7 @@ export const PROJECTS: Project[] = [
     year: "2026",
     private: true,
     accent: "orange",
+    team: { vi: "Cá nhân", en: "Personal" },
     overview: {
       vi: "Tập hợp các công cụ nhỏ mình tự viết để hỗ trợ vận hành và tự động hoá hằng ngày, phục vụ cho các hệ thống lớn hơn. Bao gồm tiện ích cho Telegram (tk_note...), công cụ kiểm tra Instagram (ins_check_go), xác minh ảnh/video Instagram (ins_verify_image_video_go), và dịch vụ sinh giọng nói AI với ElevenLabs (voice_elevenLABS). Mỗi tool nhỏ gọn, viết bằng Go / Python / Node.js tuỳ bài toán.",
       en: "A collection of small tools I built to support daily operations and automation, serving the larger systems. It includes Telegram utilities (tk_note...), an Instagram checker (ins_check_go), Instagram image/video verification (ins_verify_image_video_go), and an AI voice generation service with ElevenLabs (voice_elevenLABS). Each tool is small and focused, written in Go / Python / Node.js depending on the task.",
