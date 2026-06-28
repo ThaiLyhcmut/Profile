@@ -212,7 +212,7 @@ export default function AIChatBot() {
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.92 }}
             aria-label="Open AI chat"
-            className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30 flex items-center justify-center group"
+            className="fixed bottom-6 left-6 z-50 w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 shadow-lg shadow-cyan-500/30 flex items-center justify-center group"
           >
             {/* Pulse ring */}
             <span className="absolute inset-0 rounded-2xl bg-cyan-400/40 animate-ping" />

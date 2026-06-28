@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename="CV_LyVinhThai.pdf"',
-        'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
+        'Cache-Control': 'no-store, must-revalidate', // luôn lấy bản CV mới nhất
       },
     })
   } catch (error) {
